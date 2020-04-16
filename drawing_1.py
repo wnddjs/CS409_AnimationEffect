@@ -17,7 +17,6 @@ for n in range(45):
     step.append(1)
     upper.append(-1)
 
-
 t=0
 while(t<1000):
     img = np.zeros((512,512,3), np.uint8)
