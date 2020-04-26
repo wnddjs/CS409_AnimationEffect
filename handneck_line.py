@@ -25,6 +25,8 @@ colors = [
 ]
 
 print("Wait...")
+
+# hand point stack
 left_hand = []
 right_hand = []
 for i in range(in_video.hum_cnt):
@@ -34,7 +36,7 @@ for i in range(in_video.hum_cnt):
 i = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
-    ret, back_frame = back_cap.read()
+    ret, back_frame = back_cap.read() # original frame / It's for opacity
 
     if ret == False:
         print("Oops... ")
@@ -51,23 +53,26 @@ while(cap.isOpened()):
 
     fr_humans = in_video.frames[i].humans
     
+    # Draw a point for each person.
     for j in range(len(fr_humans)):
         human_color = colors[fr_humans[j].id - 1]
     
-        #handneck anchor
+        # handneck anchor
         human_id = fr_humans[j].id - 1
         anchors = fr_humans[j].pose_pos
-        # left
+
+        # left handneck
         point = (anchors[9][0], anchors[9][1]) 
         left_hand[human_id].append(point)
-        if (len(left_hand[human_id])>10):
-            for k in range(1,10):
-                if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80:
+        if (len(left_hand[human_id])>10): # 1th~10th points tracked
+            for k in range(1,10): 
+                if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80: # To elimate bad point
                     if  -80 < (left_hand[human_id][k+1][1] - left_hand[human_id][k][1]) < 80:
                         frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k)
                 left_hand[human_id][k] = left_hand[human_id][k+1]
             del left_hand[human_id][-1]
-        # right
+
+        # right handneck
         point = (anchors[10][0], anchors[10][1]) 
         right_hand[human_id].append(point)
         if (len(right_hand[human_id])>10):
@@ -92,7 +97,7 @@ while(cap.isOpened()):
     #                         frame = cv2.line(frame, right_hand[h][k], right_hand[h][k+1], human_color, 1+k)
     #     frame = cv2.addWeighted(back_frame, 0.7-0.05*k, frame, 0.3+0.05*k, 0)
 
-
+    # Give Opacity
     frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
     # write output frame
     out.write(frame)
