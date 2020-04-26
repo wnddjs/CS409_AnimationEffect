@@ -5,8 +5,9 @@ from parser import in_video
 
 in_video_path = '../Naver_video_01.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../output_tracking.mp4'
+out_video_path = '../output_hand_ball.mp4'
 cap = cv2.VideoCapture(in_video_path)
+back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
 height = int(cap.get(4))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -24,12 +25,17 @@ colors = [
 ]
 
 print("Wait...")
-left_hand=[[1],[2],[3],[4],[5],[6]]
-right_hand=[[1],[2],[3],[4],[5],[6]]
+left_hand = []
+right_hand = []
+for i in range(in_video.hum_cnt):
+    left_hand.append([i+1])
+    right_hand.append([i+1])
+
 i = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
-    
+    ret, back_frame = back_cap.read()
+
     if ret == False:
         print("Oops... ")
         break
@@ -46,18 +52,17 @@ while(cap.isOpened()):
     fr_humans = in_video.frames[i].humans
     ##
     for j in range(len(fr_humans)):
-        # draw Boxes rectangle
-        left_top = (fr_humans[j].box_pos[0],fr_humans[j].box_pos[2])
-        right_bottom = (fr_humans[j].box_pos[1],fr_humans[j].box_pos[3])
         human_color = colors[fr_humans[j].id - 1]
-        frame = cv2.rectangle(frame,left_top, right_bottom, human_color ,3)
 
-        #draw anchor points
+        #draw hand points
         anchors = fr_humans[j].pose_pos
-        for k in range(len(anchors)):
-            point = (anchors[k][0], anchors[k][1])
-            frame = cv2.line(frame, point, point, human_color, 7)
+        point = (anchors[9][0], anchors[9][1])
+        frame = cv2.line(frame, point, point, human_color, 40)
+        point = (anchors[10][0], anchors[10][1])
+        frame = cv2.line(frame, point, point, human_color, 40)
 
+
+    frame = cv2.addWeighted(back_frame,0.7,frame,0.3,0)
     # write output frame
     out.write(frame)
 
