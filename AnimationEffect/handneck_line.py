@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../../Naver_video_02.mp4'
+in_video_path = '../Naver_video_02.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../output_video02_.mp4'
+out_video_path = '../output_video02_.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -100,8 +100,7 @@ while(cap.isOpened()):
     # Give Opacity
     frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
     # write output frame
-    if i > 1000:
-        out.write(frame)
+    out.write(frame)
 
     i += 1
 
