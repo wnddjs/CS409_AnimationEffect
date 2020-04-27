@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../Naver_video_01.mp4'
+in_video_path = '../../Naver_video_02.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../output_hand_line_2.mp4'
+out_video_path = '../../output_video02_.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -36,7 +36,7 @@ for i in range(in_video.hum_cnt):
 i = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
-    ret, back_frame = back_cap.read() # original frame / It's for opacity
+    back_ret, back_frame = back_cap.read() # original frame / It's for opacity
 
     if ret == False:
         print("Oops... ")
@@ -48,7 +48,7 @@ while(cap.isOpened()):
         continue
 
     # Short Test
-    if i > 1000 :
+    if i > 2000 :
         break
 
     fr_humans = in_video.frames[i].humans
@@ -100,7 +100,8 @@ while(cap.isOpened()):
     # Give Opacity
     frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
     # write output frame
-    out.write(frame)
+    if i > 1000:
+        out.write(frame)
 
     i += 1
 

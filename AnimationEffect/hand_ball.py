@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../Naver_video_01.mp4'
+in_video_path = '../../Naver_video_01.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../output_hand_ball.mp4'
+out_video_path = '../../output_hand_ball.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
