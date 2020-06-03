@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../../Naver_video_02.mp4'
+in_video_path = '../../Naver_video_01.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../test_0525_2.mp4'
+out_video_path = '../../test_0603_1.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -33,10 +33,10 @@ for i in range(in_video.hum_cnt):
     left_hand.append([i+1])
     right_hand.append([i+1])
 
-def ani_effect(x,y,fr,effect):
+def ani_effect(y,x,fr,effect):
     rows, cols, channels = effect.shape
     roi = fr[x:rows+x, y:cols+y]
-
+    
     effect_gray = cv2.cvtColor(effect, cv2.COLOR_BGR2GRAY)
     ret, mask = cv2.threshold(effect_gray, 10 ,255, cv2.THRESH_BINARY)
     mask_inv = cv2.bitwise_not(mask)
@@ -49,6 +49,7 @@ def ani_effect(x,y,fr,effect):
 
     return fr
 
+ani_start = []
 i = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
@@ -67,12 +68,39 @@ while(cap.isOpened()):
     if i > 500 :
         break
     
-    # draw prepared img
-    n = 48
-    start = 100
-    if start <= i < start+n :
-        stars = cv2.imread('./Effects/Star_new/stars'+str(i-start).zfill(4)+'.jpg')
-        frame = ani_effect(10, 10, frame, stars)
+    fr_humans = in_video.frames[i].humans
+
+    for j in range(len(fr_humans)):
+        human_color = colors[fr_humans[j].id - 1]
+    
+        # handneck anchor
+        human_id = fr_humans[j].id - 1
+        anchors = fr_humans[j].pose_pos
+
+        
+
+        # draw prepared img
+        n = 12
+        start = 180
+        if i == start:
+            ani_start.append((anchors[13][0], anchors[13][1]))
+            
+    for j in range(len(ani_start)):
+        if start <= i < start+n :
+            eff = cv2.imread('../../Effects/Foot3/foot3_back'+str(i-start).zfill(4)+'.jpg')
+    
+            if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
+                frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
+                
+
+    frame = cv2.addWeighted(back_frame,0.9,frame,0.1,0)
+
+    for j in range(len(ani_start)):
+        if start <= i < start+n :
+            eff = cv2.imread('../../Effects/Foot3/foot3'+str(i-start).zfill(4)+'.jpg')
+    
+            if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
+                frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
 
     # write output frame
     out.write(frame)
