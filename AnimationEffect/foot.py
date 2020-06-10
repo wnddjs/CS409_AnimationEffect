@@ -5,7 +5,7 @@ from parser import in_video
 
 in_video_path = '../../Naver_video_01.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../test_0607_2.mp4'
+out_video_path = '../../test_0603_1.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -65,34 +65,42 @@ while(cap.isOpened()):
         continue
 
     # Short Test
-    if i > 800 :
+    if i > 500 :
         break
     
     fr_humans = in_video.frames[i].humans
 
-    for j in range(1): 
+    for j in range(len(fr_humans)):
         human_color = colors[fr_humans[j].id - 1]
     
-        # anchor
+        # handneck anchor
         human_id = fr_humans[j].id - 1
         anchors = fr_humans[j].pose_pos
 
         
 
         # draw prepared img
-        n = 47 # number of frames
-        start = 300
+        n = 12
+        start = 180
         if i == start:
-            ani_start.append((anchors[1][0], anchors[1][1]))
+            ani_start.append((anchors[13][0], anchors[13][1]))
             
     for j in range(len(ani_start)):
         if start <= i < start+n :
-            eff = cv2.imread('../../Effects/ribbon/ribbon'+str(i-start).zfill(4)+'.jpg')
+            eff = cv2.imread('../../Effects/Foot3/foot3_back'+str(i-start).zfill(4)+'.jpg')
     
             if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
                 frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
                 
-    frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
+
+    frame = cv2.addWeighted(back_frame,0.9,frame,0.1,0)
+
+    for j in range(len(ani_start)):
+        if start <= i < start+n :
+            eff = cv2.imread('../../Effects/Foot3/foot3'+str(i-start).zfill(4)+'.jpg')
+    
+            if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
+                frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
 
     # write output frame
     out.write(frame)

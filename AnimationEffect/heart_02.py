@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../../Naver_video_01.mp4'
+in_video_path = '../../Naver_video_02.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../test_0607_2.mp4'
+out_video_path = '../../test_heart02_00.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -38,7 +38,7 @@ def ani_effect(y,x,fr,effect):
     roi = fr[x:rows+x, y:cols+y]
     
     effect_gray = cv2.cvtColor(effect, cv2.COLOR_BGR2GRAY)
-    ret, mask = cv2.threshold(effect_gray, 10 ,255, cv2.THRESH_BINARY)
+    ret, mask = cv2.threshold(effect_gray, 230 ,255, cv2.THRESH_BINARY_INV)
     mask_inv = cv2.bitwise_not(mask)
 
     fr_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
@@ -65,7 +65,7 @@ while(cap.isOpened()):
         continue
 
     # Short Test
-    if i > 800 :
+    if i > 500 :
         break
     
     fr_humans = in_video.frames[i].humans
@@ -80,19 +80,19 @@ while(cap.isOpened()):
         
 
         # draw prepared img
-        n = 47 # number of frames
-        start = 300
+        n = 19 # number of frames
+        start = 400
         if i == start:
             ani_start.append((anchors[1][0], anchors[1][1]))
             
     for j in range(len(ani_start)):
         if start <= i < start+n :
-            eff = cv2.imread('../../Effects/ribbon/ribbon'+str(i-start).zfill(4)+'.jpg')
+            eff = cv2.imread('../../Effects/heart_2/animation_heart_02-'+str(i-start).zfill(4)+'.jpg')
     
-            if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
+            if (eff.shape[1]//2 < ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
                 frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
                 
-    frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
+    frame = cv2.addWeighted(back_frame,0.08,frame,0.92,0)
 
     # write output frame
     out.write(frame)

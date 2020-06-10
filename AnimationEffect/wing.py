@@ -3,9 +3,9 @@ import numpy as np
 import math
 from parser import in_video
 
-in_video_path = '../../Naver_video_01.mp4'
+in_video_path = '../../Naver_video_02.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../test_0607_2.mp4'
+out_video_path = '../../test_wing.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -38,7 +38,7 @@ def ani_effect(y,x,fr,effect):
     roi = fr[x:rows+x, y:cols+y]
     
     effect_gray = cv2.cvtColor(effect, cv2.COLOR_BGR2GRAY)
-    ret, mask = cv2.threshold(effect_gray, 10 ,255, cv2.THRESH_BINARY)
+    ret, mask = cv2.threshold(effect_gray, 80 ,255, cv2.THRESH_BINARY)
     mask_inv = cv2.bitwise_not(mask)
 
     fr_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
@@ -65,34 +65,44 @@ while(cap.isOpened()):
         continue
 
     # Short Test
-    if i > 800 :
+    if i > 1300 :
         break
     
     fr_humans = in_video.frames[i].humans
 
-    for j in range(1): 
+    for j in range(len(fr_humans)): 
         human_color = colors[fr_humans[j].id - 1]
     
         # anchor
         human_id = fr_humans[j].id - 1
         anchors = fr_humans[j].pose_pos
-
         
+        left_shoulder = (anchors[5][0], anchors[5][1])
+        right_shoulder = (anchors[6][0], anchors[6][1])
 
         # draw prepared img
-        n = 47 # number of frames
-        start = 300
-        if i == start:
-            ani_start.append((anchors[1][0], anchors[1][1]))
-            
-    for j in range(len(ani_start)):
-        if start <= i < start+n :
-            eff = cv2.imread('../../Effects/ribbon/ribbon'+str(i-start).zfill(4)+'.jpg')
-    
-            if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
-                frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
+        n = 82 # number of frames
+        start = 1000
+        if human_id == 2 :
+            if start <= i < start+n :
+                eff = cv2.imread('../../Effects/wing_left/animation_wing-'+str(i-start).zfill(4)+'.jpg')
+                eff2 = cv2.imread('../../Effects/wing_right/animation_wing-'+str(i-start).zfill(4)+'.jpg')
+
+                # resize
+                sizing = 0.7
+                eff = cv2.resize(eff, dsize=(0, 0), fx=sizing, fy=sizing, interpolation=cv2.INTER_AREA)
+                eff2 = cv2.resize(eff2, dsize=(0, 0), fx=sizing, fy=sizing, interpolation=cv2.INTER_AREA)
+
+                if (left_shoulder[0] < frame.shape[1] - eff.shape[1]) and (left_shoulder[1] < frame.shape[0] - eff.shape[0]):
+                    frame = ani_effect(left_shoulder[0],left_shoulder[1]-eff.shape[0]//2, frame, eff)
                 
-    frame = cv2.addWeighted(back_frame,0.4,frame,0.6,0)
+                if (eff2.shape[1] < right_shoulder[0] < frame.shape[1]) and (right_shoulder[1] < frame.shape[0] - eff2.shape[0]):
+                    frame = ani_effect(right_shoulder[0]-eff2.shape[1],right_shoulder[1]-eff2.shape[0]//2, frame, eff2)
+
+            # frame = cv2.line(frame,left_shoulder,left_shoulder,human_color,9)
+            # frame = cv2.line(frame,right_shoulder,right_shoulder,human_color,9)
+                
+    frame = cv2.addWeighted(back_frame,0.08,frame,0.92,0)
 
     # write output frame
     out.write(frame)
