@@ -21,6 +21,9 @@ from modules.back_light4 import back_light4_effect
 from modules.back_stagelight import back_stagelight_effect
 from modules.color_outline import outline_effect
 from modules.color_outline_black import black_outline_effect
+from modules.foot3_module import foot3_effect
+from modules.foot2_module import foot2_effect
+from modules.foot_module import foot_effect
 
 in_video_path = '../../RedVelvet.mp4'
 out_video_path = '../../RedVelvet_test_01.mp4'
@@ -61,8 +64,11 @@ while(cap.isOpened()):
     # effect modules
     if i == 30:
         i, frame, back_frame = back_streak_effect(cap,frame, back_cap,back_frame, out, in_video, i)
-
+   
     if i == 200:
+        i, frame, back_frame = foot2_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+
+    if i == 300:
         i, frame, back_frame = ribbon_effect(cap,frame, back_cap,back_frame, out, in_video, i)
 
     if i == 400:
