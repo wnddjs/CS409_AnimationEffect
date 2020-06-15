@@ -4,7 +4,7 @@ import math
 
 def back_light4_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
    
-    eff_path = '../../Effects/back/light4.mp4'
+    eff_path = './Effects/back/light4.mp4'
     eff_video = cv2.VideoCapture(eff_path)
 
     print("stage light...")

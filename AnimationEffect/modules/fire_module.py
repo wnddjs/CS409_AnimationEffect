@@ -51,7 +51,7 @@ def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
             anchors = fr_humans[j].pose_pos
 
             standard_height = int((anchors[13][1]-anchors[2][1])*0.4) 
-            eff = cv2.imread('../../Effects/fire/animation_fire-'+str((i-start)%64).zfill(4)+'.jpg')
+            eff = cv2.imread('./Effects/fire/animation_fire-'+str((i-start)%64).zfill(4)+'.jpg')
             eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
             # left handneck

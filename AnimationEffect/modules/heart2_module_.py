@@ -53,7 +53,7 @@ def heart2_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
                 
         for j in range(len(ani_start)):
             if start <= i < start+n :
-                eff = cv2.imread('../../Effects/heart_2/animation_heart_02-'+str(i-start).zfill(4)+'.jpg')
+                eff = cv2.imread('./Effects/heart_2/animation_heart_02-'+str(i-start).zfill(4)+'.jpg')
                 eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
                 if (eff.shape[1]//2 <  ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):

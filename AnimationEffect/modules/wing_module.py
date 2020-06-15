@@ -51,8 +51,8 @@ def wing_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
             # draw prepared img
             if human_id == 2 :
                 if start <= i < start+n :
-                    eff = cv2.imread('../../Effects/wing_left/animation_wing-'+str(i-start).zfill(4)+'.jpg')
-                    eff2 = cv2.imread('../../Effects/wing_right/animation_wing-'+str(i-start).zfill(4)+'.jpg')
+                    eff = cv2.imread('./Effects/wing_left/animation_wing-'+str(i-start).zfill(4)+'.jpg')
+                    eff2 = cv2.imread('./Effects/wing_right/animation_wing-'+str(i-start).zfill(4)+'.jpg')
 
                     # resize
                     sizing = 0.8

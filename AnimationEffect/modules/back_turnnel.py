@@ -30,7 +30,7 @@ def ani_effect(y,x,fr,effect):
 
 def back_turnnel_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
    
-    eff_path = '../../Effects/back/turnnel.mp4'
+    eff_path = './Effects/back/turnnel.mp4'
     eff_video = cv2.VideoCapture(eff_path)
 
     print("turnnel...")
