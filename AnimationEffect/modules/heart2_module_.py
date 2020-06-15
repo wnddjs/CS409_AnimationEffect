@@ -7,7 +7,7 @@ def ani_effect(y,x,fr,effect):
     roi = fr[x:rows+x, y:cols+y]
     
     effect_gray = cv2.cvtColor(effect, cv2.COLOR_BGR2GRAY)
-    ret, mask = cv2.threshold(effect_gray, 10 ,255, cv2.THRESH_BINARY)
+    ret, mask = cv2.threshold(effect_gray, 230 ,255, cv2.THRESH_BINARY_INV)
     mask_inv = cv2.bitwise_not(mask)
 
     fr_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
@@ -18,14 +18,14 @@ def ani_effect(y,x,fr,effect):
 
     return fr
 
-def heart1_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
+def heart2_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
     
-    print("heart1...")
+    print("heart2...")
 
-    n = 15 # number of frames
+    n = 19 # number of frames
     start = i
     ani_start = []
-    std_heights = []
+
     while(cap.isOpened()):
 
         #Skip the unrecognized frame
@@ -40,27 +40,28 @@ def heart1_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
         fr_humans = in_video.frames[i].humans
         
         # Draw a point for each person.
-        for j in range(len(fr_humans)):
+        for j in range(1):
         
             human_id = fr_humans[j].id - 1
             anchors = fr_humans[j].pose_pos
+
             
             # set position and size
             if i == start:
-                std_height = int(0.7*(anchors[13][1]-anchors[2][1])) #  knee - eye
-                std_heights.append(std_height) 
-                ani_start.append((anchors[1][0], anchors[1][1]-int(std_height*0.3)))
+                ani_start.append((anchors[1][0], anchors[1][1]))
+                standard_height = anchors[13][1]-anchors[2][1] #  knee - eye
                 
         for j in range(len(ani_start)):
             if start <= i < start+n :
-                eff = cv2.imread('../../Effects/heart_1/animation_heart_01-'+str(i-start).zfill(4)+'.jpg')
-                eff = cv2.resize(eff, dsize=(eff.shape[1]*std_heights[j]//eff.shape[0], std_heights[j]), interpolation=cv2.INTER_LINEAR)
+                eff = cv2.imread('../../Effects/heart_2/animation_heart_02-'+str(i-start).zfill(4)+'.jpg')
+                eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
-                if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (eff.shape[0]//2 < ani_start[j][1] < frame.shape[0] - eff.shape[0]):
-                    frame = ani_effect(ani_start[j][0]-eff.shape[1]//2, ani_start[j][1]-eff.shape[0]//2, frame, eff)
+                if (eff.shape[1]//2 <  ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
+                    frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
+    
                 
         # Give Opacity
-        # frame = cv2.addWeighted(back_frame,0.1,frame,0.9,0)
+        frame = cv2.addWeighted(back_frame,0.2,frame,0.8,0)
 
         # write output frame
         out.write(frame)

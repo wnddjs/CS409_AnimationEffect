@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import math
-
 def ani_effect(y,x,fr,effect):
     rows, cols, channels = effect.shape
     roi = fr[x:rows+x, y:cols+y]
@@ -18,15 +17,20 @@ def ani_effect(y,x,fr,effect):
 
     return fr
 
-def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
-    
+def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
+
+    start = i
     print("fire...")
 
-    n = 32 # number of frames
-    start = i
-    ani_start = []
+    # point stack
+    left_hand = []
+    right_hand = []
+    for n in range(in_video.hum_cnt):
+        left_hand.append([n+1])
+        right_hand.append([n+1])
 
     while(cap.isOpened()):
+        
 
         #Skip the unrecognized frame
         if in_video.frames[i] == 'empty_frame':
@@ -34,34 +38,65 @@ def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
             continue
 
         # Short Test
-        if i == start + n  :
+        if i == start + term  :
             break
 
         fr_humans = in_video.frames[i].humans
-        
+
         # Draw a point for each person.
-        for j in range(1):
+        for j in range(len(fr_humans)):
         
             # handneck anchor
             human_id = fr_humans[j].id - 1
             anchors = fr_humans[j].pose_pos
 
-            # draw prepared img
-            
-            if i == start:
-                ani_start.append((anchors[1][0], anchors[1][1]))
+            standard_height = int((anchors[13][1]-anchors[2][1])*0.4) 
+            eff = cv2.imread('../../Effects/fire/animation_fire-'+str((i-start)%64).zfill(4)+'.jpg')
+            eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
-        for j in range(len(ani_start)):
-            if start <= i < start+n :
-                eff = cv2.imread('../../Effects/fire/animation_fire-'+str(i-start).zfill(4)+'.jpg')
-        
-                if (eff.shape[1]//2 <  ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
-                    frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
-    
-                
+            # left handneck
+            point = (anchors[15][0], anchors[15][1]) 
+            left_hand[human_id].append(point)
+            if (len(left_hand[human_id])>3): # 1th~10th points tracked
+                for k in range(1,3): 
+                    if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80: # To elimate bad point
+                        if  -80 < (left_hand[human_id][k+1][1] - left_hand[human_id][k][1]) < 80:
+                            # frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k*7)
+                            if (eff.shape[1]//2 <  left_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (left_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
+                                frame = ani_effect(left_hand[human_id][k][0]-eff.shape[1]//2,left_hand[human_id][k][1]-eff.shape[0]//2, frame, eff)
+                    left_hand[human_id][k] = left_hand[human_id][k+1]
+                del left_hand[human_id][-1]
+
+            # right handneck
+            point = (anchors[16][0], anchors[16][1]) 
+            right_hand[human_id].append(point)
+            if (len(right_hand[human_id])>3):
+                for k in range(1,3):
+                    if -80 < (right_hand[human_id][k+1][0] - right_hand[human_id][k][0]) < 80:
+                        if -80 < (right_hand[human_id][k+1][1] - right_hand[human_id][k][1]) < 80: 
+                            # frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 2+k*7)
+                            if (eff.shape[1]//2 <  right_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (right_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
+                                frame = ani_effect(right_hand[human_id][k][0]-eff.shape[1]//2,right_hand[human_id][k][1]-eff.shape[0]//2, frame, eff)
+                    right_hand[human_id][k] = right_hand[human_id][k+1]
+                del right_hand[human_id][-1]
+
+        ## opacity version ##
+        # for k in range(1,11):
+        #     for h in range(len(left_hand)):
+        #         human_color = colors[h]
+        #         if (len(left_hand[h])==12):
+        #             if -40 < (left_hand[h][k+1][0] - left_hand[h][k][0]) < 40:
+        #                     if  -40 < (left_hand[h][k+1][1] - left_hand[h][k][1]) < 40:
+        #                         frame = cv2.line(frame, left_hand[h][k], left_hand[h][k+1], human_color, 1+k)
+        #         if (len(right_hand[h])==12):
+        #             if -40 < (right_hand[h][k+1][0] - right_hand[h][k][0]) < 40:
+        #                     if -40 < (right_hand[h][k+1][1] - right_hand[h][k][1]) < 40: 
+        #                         frame = cv2.line(frame, right_hand[h][k], right_hand[h][k+1], human_color, 1+k)
+        #     frame = cv2.addWeighted(back_frame, 0.7-0.05*k, frame, 0.3+0.05*k, 0)
+
         # Give Opacity
         frame = cv2.addWeighted(back_frame,0.2,frame,0.8,0)
-
+        
         # write output frame
         out.write(frame)
         i += 1
