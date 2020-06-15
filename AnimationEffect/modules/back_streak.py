@@ -19,7 +19,7 @@ def ani_effect(y,x,fr,effect):
     return fr
 
 def back_streak_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
-   
+    
     eff_path = '../../Effects/back/Streaks.mp4'
     eff_video = cv2.VideoCapture(eff_path)
 
@@ -53,7 +53,7 @@ def back_streak_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
         # write output frame
         out.write(frame)
         i += 1
-
+        
         #
         ret, frame = cap.read()
         back_ret, back_frame = back_cap.read() # original frame / It's for opacity

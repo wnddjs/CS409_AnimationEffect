@@ -18,18 +18,19 @@ from modules.back_turnnel import back_turnnel_effect
 from modules.back_light2 import back_light2_effect
 from modules.back_light3 import back_light3_effect
 from modules.back_light4 import back_light4_effect
+from modules.back_stagelight import back_stagelight_effect
 from modules.color_outline import outline_effect
 from modules.color_outline_black import black_outline_effect
 
 in_video_path = '../../Naver_video_02.mp4'
-out_video_path = '../../proto_01.mp4'
+out_video_path = '../../proto_03.mp4'
 
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)
 
 width = int(cap.get(3))
 height = int(cap.get(4))
-fps = int(cap.get(cv2.CAP_PROP_FPS))
+fps = cap.get(cv2.CAP_PROP_FPS)
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 out = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
@@ -46,11 +47,12 @@ while(cap.isOpened()):
 
     #Skip the unrecognized frame
     if in_video.frames[i] == 'empty_frame':
+        
         i += 1
         continue
 
     # Short Test
-    # if i > 2400 :
+    # if i > 300 :
     #     break
 
     # effect modules
@@ -88,10 +90,20 @@ while(cap.isOpened()):
         i, frame, back_frame = back_glowing_effect(cap,frame, back_cap,back_frame, out, in_video, i)
     
     if i == 1750:
-        i, frame, back_frame = back_light2_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+        i, frame, back_frame = back_light4_effect(cap,frame, back_cap,back_frame, out, in_video, i)
 
     if i == 2180:
         i, frame, back_frame = black_outline_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+
+    # if i == 2500:
+    #     i, frame, back_frame = back_light3_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+
+    # if i == 2900:
+    #     i, frame, back_frame = back_stagelight_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+
+    # if i == 3300:
+    #     i, frame, back_frame = mirrorball_effect(cap,frame, back_cap,back_frame, out, in_video, i)
+
     # write output frame
     out.write(frame)
 
@@ -104,10 +116,10 @@ cv2.destroyAllWindows()
 print("Done!")
 
 # add audio
-my_clip = mpe.VideoFileClip('../../proto_01.mp4')
+my_clip = mpe.VideoFileClip('../../proto_03.mp4')
 audio_background = mpe.VideoFileClip('../../Naver_video_02.mp4')
 my_clip.audio = audio_background.audio
-my_clip.write_videofile('../../proto_02.mp4',
+my_clip.write_videofile('../../proto_04.mp4',
   codec='libx264', 
   audio_codec='aac', 
   temp_audiofile='temp-audio.m4a', 
