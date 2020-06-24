@@ -7,7 +7,7 @@ def ani_effect(y,x,fr,effect):
     roi = fr[x:rows+x, y:cols+y]
     
     effect_gray = cv2.cvtColor(effect, cv2.COLOR_BGR2GRAY)
-    ret, mask = cv2.threshold(effect_gray, 100,255, cv2.THRESH_BINARY)
+    ret, mask = cv2.threshold(effect_gray, 70,255, cv2.THRESH_BINARY)
     mask_inv = cv2.bitwise_not(mask)
 
     fr_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)

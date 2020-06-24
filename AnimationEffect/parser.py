@@ -28,7 +28,7 @@ class Frame():
 
 print("generating json deserialization... ")
 # with open('../../(G)I-DLE-02_matching.json') as json_file:
-with open('../../RedVelvet.json') as json_file:
+with open('../../itzy_dala.json') as json_file:
     json_string = json.load(json_file)
 
 json_data = json.loads(json_string)

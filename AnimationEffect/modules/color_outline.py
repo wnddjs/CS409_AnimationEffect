@@ -44,7 +44,7 @@ def outline_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
     ctx = mx.cpu(0)
     model = gluoncv.model_zoo.get_model('icnet_resnet50_mhpv1', pretrained=True)
 
-    n = 120 # number of frames
+    n = 130 # number of frames
     start = i
 
     boxes = []

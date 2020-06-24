@@ -42,11 +42,17 @@ def heart2_effect (cap, frame, back_cap, back_frame, out, in_video, who, i) :
         # no exist point
         if who > len(fr_humans)-1:
             break
-
+        
+        ids = []
+        anchors = 0
         # Draw a point for each person.
-        
-        anchors = fr_humans[who].pose_pos
-        
+        for j in range(len(fr_humans)):
+            ids.append((fr_humans[j].id-1,fr_humans[j].pose_pos))
+        for k in range(len(ids)):
+            if who == ids[k][0]:
+                anchors = ids[k][1]
+        if anchors == 0:
+            break
         # set position and size
         if i == start:
             std_height = int(0.3*(anchors[13][1]-anchors[2][1])) #  knee - eye
@@ -82,6 +88,19 @@ def heart2_effect (cap, frame, back_cap, back_frame, out, in_video, who, i) :
 
 
 def heart2_effects (cap, frame, back_cap, back_frame, out, in_video, i) :
-    for j in range(in_video.hum_cnt):
-        i, frame, back_frame = heart2_effect(cap,frame, back_cap,back_frame, out, in_video, j, i)
+    fr_humans = in_video.frames[i].humans
+    leftfirst=[]
+    for j in range(len(fr_humans)):
+        leftfirst.append((fr_humans[j].pose_pos)[1][1])
+    leftfirst.sort()
+    
+    heart_=[]
+    for l in leftfirst:
+        for j in range(len(fr_humans)):
+            if (fr_humans[j].pose_pos)[1][1] == l:
+                heart_.append(fr_humans[j].id-1)
+                break
+    
+    for j in range(len(heart_)):
+        i, frame, back_frame = heart2_effect(cap,frame, back_cap,back_frame, out, in_video, heart_[j], i)
     return i, frame, back_frame

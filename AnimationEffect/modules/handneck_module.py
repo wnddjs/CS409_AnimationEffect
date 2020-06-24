@@ -50,7 +50,7 @@ def handneck_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
                 for k in range(1,10): 
                     if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80: # To elimate bad point
                         if  -80 < (left_hand[human_id][k+1][1] - left_hand[human_id][k][1]) < 80:
-                            frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k*7)
+                            frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k*3)
                     left_hand[human_id][k] = left_hand[human_id][k+1]
                 del left_hand[human_id][-1]
 
@@ -61,7 +61,7 @@ def handneck_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
                 for k in range(1,10):
                     if -80 < (right_hand[human_id][k+1][0] - right_hand[human_id][k][0]) < 80:
                         if -80 < (right_hand[human_id][k+1][1] - right_hand[human_id][k][1]) < 80: 
-                            frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 2+k*7)
+                            frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 2+k*5)
                     right_hand[human_id][k] = right_hand[human_id][k+1]
                 del right_hand[human_id][-1]
 

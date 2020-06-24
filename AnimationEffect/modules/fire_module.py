@@ -50,7 +50,7 @@ def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
             human_id = fr_humans[j].id - 1
             anchors = fr_humans[j].pose_pos
 
-            standard_height = int((anchors[13][1]-anchors[2][1])*0.4) 
+            standard_height = abs(int((anchors[13][1]-anchors[2][1])*0.4))
             eff = cv2.imread('./Effects/fire/animation_fire-'+str((i-start)%64).zfill(4)+'.jpg')
             eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
@@ -62,7 +62,7 @@ def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
                     if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80: # To elimate bad point
                         if  -80 < (left_hand[human_id][k+1][1] - left_hand[human_id][k][1]) < 80:
                             # frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k*7)
-                            if (eff.shape[1]//2 <  left_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (left_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
+                            if (eff.shape[1]//2 <  left_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (eff.shape[0]//2 < left_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
                                 frame = ani_effect(left_hand[human_id][k][0]-eff.shape[1]//2,left_hand[human_id][k][1]-eff.shape[0]//2, frame, eff)
                     left_hand[human_id][k] = left_hand[human_id][k+1]
                 del left_hand[human_id][-1]
@@ -75,7 +75,7 @@ def fire_effect (cap, frame, back_cap, back_frame, out, in_video, i, term) :
                     if -80 < (right_hand[human_id][k+1][0] - right_hand[human_id][k][0]) < 80:
                         if -80 < (right_hand[human_id][k+1][1] - right_hand[human_id][k][1]) < 80: 
                             # frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 2+k*7)
-                            if (eff.shape[1]//2 <  right_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (right_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
+                            if (eff.shape[1]//2 <  right_hand[human_id][k][0] < frame.shape[1] - eff.shape[1]) and (eff.shape[0]//2 < right_hand[human_id][k][1] < frame.shape[0] - eff.shape[0]):
                                 frame = ani_effect(right_hand[human_id][k][0]-eff.shape[1]//2,right_hand[human_id][k][1]-eff.shape[0]//2, frame, eff)
                     right_hand[human_id][k] = right_hand[human_id][k+1]
                 del right_hand[human_id][-1]

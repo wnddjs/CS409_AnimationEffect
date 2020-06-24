@@ -47,7 +47,7 @@ def heart1_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
             
             # set position and size
             if i == start:
-                std_height = int(0.7*(anchors[13][1]-anchors[2][1])) #  knee - eye
+                std_height = int(0.9*(anchors[13][1]-anchors[2][1])) #  knee - eye
                 std_heights.append(std_height) 
                 ani_start.append((anchors[1][0], anchors[1][1]-int(std_height*0.3)))
                 

@@ -22,7 +22,7 @@ def wing_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
     
     print("Wing...")
 
-    n = 82 # number of frames
+    n = 70 # number of frames
     start = i
 
     while(cap.isOpened()):
@@ -49,13 +49,13 @@ def wing_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
             right_shoulder = (anchors[6][0], anchors[6][1])
 
             # draw prepared img
-            if human_id == 2 :
+            if human_id == 5 :
                 if start <= i < start+n :
                     eff = cv2.imread('./Effects/wing_left/animation_wing-'+str(i-start).zfill(4)+'.jpg')
                     eff2 = cv2.imread('./Effects/wing_right/animation_wing-'+str(i-start).zfill(4)+'.jpg')
 
                     # resize
-                    sizing = 0.8
+                    sizing = 0.6
                     eff = cv2.resize(eff, dsize=(0, 0), fx=sizing, fy=sizing, interpolation=cv2.INTER_AREA)
                     eff2 = cv2.resize(eff2, dsize=(0, 0), fx=sizing, fy=sizing, interpolation=cv2.INTER_AREA)
 
@@ -67,7 +67,7 @@ def wing_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
     
                 
         # Give Opacity
-        frame = cv2.addWeighted(back_frame,0.07,frame,0.93,0)
+        frame = cv2.addWeighted(back_frame,0.15,frame,0.85,0)
 
         # write output frame
         out.write(frame)

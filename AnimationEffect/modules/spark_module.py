@@ -40,14 +40,15 @@ def spark_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
         fr_humans = in_video.frames[i].humans
         
         # Draw a point for each person.
-        for j in range(1):
+        for j in range(len(fr_humans)):
         
             human_id = fr_humans[j].id - 1
             anchors = fr_humans[j].pose_pos
 
             # set position and size
             if i == start:
-                ani_start.append((anchors[1][0], anchors[1][1]))
+                if j == 4:
+                    ani_start.append((anchors[1][0], anchors[1][1]))
                 standard_height = anchors[13][1]-anchors[2][1] #  knee - eye
         
         #draw

@@ -28,7 +28,7 @@ def ani_effect(y,x,fr,effect):
 
     return fr
 
-def black_outline_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
+def black_outline_effect (cap, frame, back_cap, back_frame, out, in_video, i , term) :
 
     colors = [
     (0,0,255), #red
@@ -44,7 +44,8 @@ def black_outline_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
     ctx = mx.cpu(0)
     model = gluoncv.model_zoo.get_model('icnet_resnet50_mhpv1', pretrained=True)
 
-    n = 120 # number of frames
+    # n = 140 # number of frames
+    n = term
     start = i
 
     boxes = []

@@ -25,7 +25,7 @@ def mirrorball_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
 
     print("mirrorball...")
 
-    n = 100 # number of frames
+    n = 80 # number of frames
     start = i
 
     while(cap.isOpened()):

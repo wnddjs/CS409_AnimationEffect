@@ -25,7 +25,7 @@ def back_glowing_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
 
     print("Glowing...")
 
-    n = 200 # number of frames
+    n = 180 # number of frames
     start = i
 
     while(cap.isOpened()):

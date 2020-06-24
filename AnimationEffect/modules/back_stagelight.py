@@ -25,7 +25,7 @@ def back_stagelight_effect (cap, frame, back_cap, back_frame, out, in_video, i) 
 
     print("stage light...")
 
-    n = 250 # number of frames
+    n = 230 # number of frames
     start = i
     
     while(cap.isOpened()):

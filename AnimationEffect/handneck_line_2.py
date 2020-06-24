@@ -5,7 +5,7 @@ from parser import in_video
 
 in_video_path = '../../Naver_video_02.mp4'
 #out_video_path = '../Result_Naver_video_01.mp4'
-out_video_path = '../../test_0607_1.mp4'
+out_video_path = '../../test_fianl.mp4'
 cap = cv2.VideoCapture(in_video_path)
 back_cap = cv2.VideoCapture(in_video_path)##
 width = int(cap.get(3))
@@ -64,22 +64,22 @@ while(cap.isOpened()):
         # left handneck
         point = (anchors[9][0], anchors[9][1]) 
         left_hand[human_id].append(point)
-        if (len(left_hand[human_id])>10): # 1th~10th points tracked
-            for k in range(1,10): 
+        if (len(left_hand[human_id])>2): # 1th~10th points tracked
+            for k in range(1,2): 
                 if -80 < (left_hand[human_id][k+1][0] - left_hand[human_id][k][0]) < 80: # To elimate bad point
                     if  -80 < (left_hand[human_id][k+1][1] - left_hand[human_id][k][1]) < 80:
-                        frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 2+k*7)
+                        frame = cv2.line(frame, left_hand[human_id][k], left_hand[human_id][k+1], human_color, 20+k*7)
                 left_hand[human_id][k] = left_hand[human_id][k+1]
             del left_hand[human_id][-1]
 
         # right handneck
         point = (anchors[10][0], anchors[10][1]) 
         right_hand[human_id].append(point)
-        if (len(right_hand[human_id])>10):
-            for k in range(1,10):
+        if (len(right_hand[human_id])>2):
+            for k in range(1,2):
                 if -80 < (right_hand[human_id][k+1][0] - right_hand[human_id][k][0]) < 80:
                     if -80 < (right_hand[human_id][k+1][1] - right_hand[human_id][k][1]) < 80: 
-                        frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 2+k*7)
+                        frame = cv2.line(frame, right_hand[human_id][k], right_hand[human_id][k+1], human_color, 20+k*7)
                 right_hand[human_id][k] = right_hand[human_id][k+1]
             del right_hand[human_id][-1]
 

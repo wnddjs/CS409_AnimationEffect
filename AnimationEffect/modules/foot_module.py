@@ -48,7 +48,7 @@ def foot_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
             # set position and size
             if i == start:
                 ani_start.append((anchors[13][0], anchors[13][1]))
-                standard_height = anchors[13][1]-anchors[2][1] #  knee - eye
+                standard_height = int((anchors[13][1]-anchors[2][1])*0.6) #  knee - eye
         
         #draw
         for j in range(len(ani_start)):
@@ -57,7 +57,7 @@ def foot_effect (cap, frame, back_cap, back_frame, out, in_video, i) :
                 eff = cv2.resize(eff, dsize=(eff.shape[1]*standard_height//eff.shape[0], standard_height), interpolation=cv2.INTER_LINEAR)
                 
                 if (ani_start[j][0] < frame.shape[1] - eff.shape[1]) and (ani_start[j][1] < frame.shape[0] - eff.shape[0]):
-                    frame = ani_effect(ani_start[j][0]-eff.shape[1]//2,ani_start[j][1], frame, eff)
+                    frame = ani_effect(int(ani_start[j][0]-eff.shape[1]//2),ani_start[j][1], frame, eff)
                 
         # Give Opacity
         frame = cv2.addWeighted(back_frame,0.1,frame,0.9,0)
